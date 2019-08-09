@@ -70,7 +70,7 @@ export default class PlayerScreen extends React.Component {
         const playListData = Object.assign([], playList)
         const currentTrack = await TrackPlayer.getCurrentTrack()
         if (currentTrack == null) {
-            console.log('check trakcer play', playListData)
+
 
             await TrackPlayer.add(playListData);
             await TrackPlayer.add({

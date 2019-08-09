@@ -39,15 +39,15 @@ const AppContainer = createAppContainer(AppNavigator);
 
 export default class App extends React.Component {
 
-    requestCameraPermission = async ()=> {
+    requestFolderAccessPermission = async ()=> {
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
         {
-          title: 'Cool Photo App Camera Permission',
+          title: 'Wele Tool Permissions',
           message:
             'Cool Photo App needs access to your Foler ' +
-            'so you can take awesome pictures.',
+            'so you can play your own playlist.',
           buttonNeutral: 'Ask Me Later',
           buttonNegative: 'Cancel',
           buttonPositive: 'OK',
@@ -70,7 +70,7 @@ export default class App extends React.Component {
 
   componentDidMount = async () => {
     await getSettings()
-    await requestCameraPermission()
+    await this.requestFolderAccessPermission()
   }
   render() {
     return (

@@ -43,16 +43,18 @@ export default class PlaylistScreen extends Component {
 
         const playDataList = await res.map(async (result) => {
 
-            const stats = await RNFetchBlob.fs.stat(result.uri) // Relative path obtained from document picker
-            console.log(stats);
-            var str1 = "file://";
-            var str2 = stats.path;
-            var correctpath = str1.concat(str2);
-            console.log(correctpath)
+            let correctPath = result.uri
+            if (result.uri.indexOf('externalstorage') !== -1) {
+
+                const stats = await RNFetchBlob.fs.stat(result.uri) // Relative path obtained from document picker
+                var str1 = "file://";
+                var str2 = stats.path;
+                correctPath = str1.concat(str2);
+            }
      
             return {
                 id: uuid(),
-                url: result.uri,
+                url: correctPath,
                 title: result.name,
                 artist: "David Chavez",
                 artwork: "https://picsum.photos/200"

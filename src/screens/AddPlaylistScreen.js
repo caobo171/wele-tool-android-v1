@@ -11,8 +11,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import RNFileSelector from 'react-native-file-selector';
 import { trimString, saveWelePlayList, saveCurrentList } from '../helpers/utils'
 import playlistContainer from '../containers/PlayListContainer';
-
-var RNGRP = require('react-native-get-real-path');
+import RNFetchBlob from 'react-native-fetch-blob'
 
 // import { DocumentPicker, ImagePicker } from 'expo';
 
@@ -45,61 +44,34 @@ export default class AddPlaylistScreen extends Component {
 
     onPickHandle = async () => {
 
-        // let result = await DocumentPicker.getDocumentAsync({});
-        // alert(result.uri);
-        // console.log(result)
-        // console.log(result);
-
 
         const res = await DocumentPicker.pickMultiple({
             type: [DocumentPicker.types.audio],
         });
- 
-        let playListSongs = res.map(result => {
-            const path = RNGRP.getRealPathFromURI(result.uri)
-    
-            var uri_dec = decodeURIComponent(result.uri);
-            var realpath = 'file:///'+ uri_dec.split(':')[uri_dec.split(':').length -1]
-            console.log('check ', realpath , result.uri)
+
+        let playListSongs = res.filter(result => result.uri.indexOf('externalstorage') !== -1)
+        .map(async (result) => {
+            let correctPath = result.uri
+            if (result.uri.indexOf('externalstorage') !== -1) {
+
+                const stats = await RNFetchBlob.fs.stat(result.uri) // Relative path obtained from document picker
+                var str1 = "file://";
+                var str2 = stats.path;
+                correctPath = str1.concat(str2);
+            }
+
             return {
                 id: uuid(),
-                url: result.uri,
+                url: correctPath,
                 title: result.name,
                 artist: "David Chavez",
                 artwork: "https://picsum.photos/200"
             }
         })
-        let playList = [...this.state.playListSongs, ...playListSongs]
+
+        const dataPlaylist = await Promise.all(playListSongs)
+        let playList = [...this.state.playListSongs, ...dataPlaylist]
         this.setState({ playListSongs: playList })
-
-
-        // await RNFileSelector.Show(
-        //     {
-        //         title: 'Select File',
-        //         onDone: (path) => {
-        //             console.log('file selected: ' + path)
-        //         },
-        //         onCancel: () => {
-        //             console.log('cancelled')
-        //         }
-        //     }
-        // )
-
-        // FilePickerManager.showFilePicker(null, (response) => {
-        //     console.log('Response = ', response);
-          
-        //     if (response.didCancel) {
-        //       console.log('User cancelled file picker');
-        //     }
-        //     else if (response.error) {
-        //       console.log('FilePickerManager Error: ', response.error);
-        //     }
-        //     else {
-        //       this.setState({
-        //         file: response
-        //       });
-        //     }
-        //   });
     }
 
     setName = (value) => {
