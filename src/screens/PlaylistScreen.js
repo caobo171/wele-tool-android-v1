@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Image, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { Container, Fab, Content, Card, CardItem, Thumbnail, Text, Button, Left, Body, Right, List, ListItem } from 'native-base';
@@ -7,16 +6,14 @@ import { Container, Fab, Content, Card, CardItem, Thumbnail, Text, Button, Left,
 import DocumentPicker from 'react-native-document-picker';
 import uuid from 'uuid'
 import playlistContainer from '../containers/PlayListContainer'
-import AsyncStorage from '@react-native-community/async-storage'
 
 import { getCurrentPlayList, getWelePlayList, deleteWelePlayList, saveCurrentList, clear, trimString } from '../helpers/utils'
 
 import { SubscribeOne } from 'unstated-x'
 
-import RNFetchBlob from 'react-native-fetch-blob'
-import RNFS from 'react-native-fs'
+// import RNFetchBlob from 'react-native-fetch-blob'
 
-// import FileProvider from 'react-native-file-provider';
+import RNGRP from 'react-native-get-real-path'
 
 export default class PlaylistScreen extends Component {
     state = {
@@ -27,6 +24,7 @@ export default class PlaylistScreen extends Component {
     componentDidMount = async () => {
         await getWelePlayList()
         await getCurrentPlayList()
+ 
     }
 
     onAddPlaylistHandle = () => {
@@ -45,10 +43,9 @@ export default class PlaylistScreen extends Component {
 
             let correctPath = result.uri
             if (result.uri.indexOf('externalstorage') !== -1) {
-
-                const stats = await RNFetchBlob.fs.stat(result.uri) // Relative path obtained from document picker
+                const stats = await RNGRP.getRealPathFromURI(result.uri)// Relative path obtained from document picker
                 var str1 = "file://";
-                var str2 = stats.path;
+                var str2 = stats
                 correctPath = str1.concat(str2);
             }
      

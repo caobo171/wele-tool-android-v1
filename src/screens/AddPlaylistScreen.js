@@ -5,16 +5,13 @@ import {
     Icon, Button, Text, List, ListItem, Thumbnail, Left, Body, Right
 } from 'native-base';
 import DocumentPicker from 'react-native-document-picker';
-import FilePickerManager from 'react-native-file-picker';
 import uuid from 'uuid'
-import AsyncStorage from '@react-native-community/async-storage'
-import RNFileSelector from 'react-native-file-selector';
 import { trimString, saveWelePlayList, saveCurrentList } from '../helpers/utils'
 import playlistContainer from '../containers/PlayListContainer';
-import RNFetchBlob from 'react-native-fetch-blob'
+// import RNFetchBlob from 'react-native-fetch-blob'
 
 // import { DocumentPicker, ImagePicker } from 'expo';
-
+import RNGRP from 'react-native-get-real-path'
 
 
 export default class AddPlaylistScreen extends Component {
@@ -54,9 +51,9 @@ export default class AddPlaylistScreen extends Component {
             let correctPath = result.uri
             if (result.uri.indexOf('externalstorage') !== -1) {
 
-                const stats = await RNFetchBlob.fs.stat(result.uri) // Relative path obtained from document picker
+                const stats = await RNGRP.getRealPathFromURI(result.uri)// Relative path obtained from document picker
                 var str1 = "file://";
-                var str2 = stats.path;
+                var str2 = stats
                 correctPath = str1.concat(str2);
             }
 
@@ -132,11 +129,6 @@ export default class AddPlaylistScreen extends Component {
             <Container>
                 <Content>
                     <Form style={styles.form}>
-                        <RNFileSelector title={"Select File"} visible={this.state.visible} onDone={() => {
-                            console.log("file selected: " + path);
-                        }} onCancel={() => {
-                            console.log("cancelled");
-                        }} />
                         {this.renderForm()}
                         {
                             this.state.edit && (

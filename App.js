@@ -17,7 +17,7 @@ import { Provider } from 'unstated-x'
 
 import {PermissionsAndroid} from 'react-native';
 
-
+import SplashScreen from 'react-native-splash-screen'
 import { getSettings } from './src/helpers/utils'
 
 const AppNavigator = createStackNavigator(
@@ -71,6 +71,7 @@ export default class App extends React.Component {
   componentDidMount = async () => {
     await getSettings()
     await this.requestFolderAccessPermission()
+    SplashScreen.hide()
   }
   render() {
     return (
@@ -78,7 +79,7 @@ export default class App extends React.Component {
         <Provider>
 
           <DrawerLayout
-            drawerWidth={300}
+            drawerWidth={200}
             keyboardDismissMode="on-drag"
             statusBarBackgroundColor="blue"
             renderNavigationView={() => <SettingScreen />}>

@@ -195,8 +195,8 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-splash-screen')
     implementation project(':react-native-get-real-path')
-    implementation project(':react-native-file-selector')
     implementation project(':@react-native-community_slider')
     implementation project(':react-native-document-picker')
     implementation project(':react-native-gesture-handler')
